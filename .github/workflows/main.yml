@@ -1,7 +1,6 @@
 name: Run Heavy stuff
 on:
-  push:
-    branches: main
+  workflow_dispatch:
 jobs:
   Work-time:
     runs-on: ubuntu-latest
@@ -11,3 +10,11 @@ jobs:
         with:
           repository: john4650-hub/Hello-Android-CI
           token: ${{ secrets.TK }} # `GH_PAT` is a secret that contains your PAT
+      - name: Download pdf
+        run: |
+          chmod +x run_command.sh
+          ./run_command.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.TK }}
+        shell: bash
+        
