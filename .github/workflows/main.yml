@@ -13,7 +13,7 @@ jobs:
       - name: Download pdf
         run: |
           chmod +x run_command.sh
-          ./run_command.sh
+          ./run_command.sh  ${{ github.run_number }}.0.0 "$GITHUB_TOKEN"
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
