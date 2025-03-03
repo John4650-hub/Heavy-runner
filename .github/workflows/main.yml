@@ -1,0 +1,13 @@
+name: Run Heavy stuff
+on:
+  push:
+    branches: main
+jobs:
+  Work-time:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private tools
+        uses: actions/checkout@v4
+        with:
+          repository: john4650-hub/Hello-Android-CI
+          token: ${{ secrets.TK }} # `GH_PAT` is a secret that contains your PAT
