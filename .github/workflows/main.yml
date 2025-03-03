@@ -9,12 +9,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: john4650-hub/Hello-Android-CI
-          token: ${{ secrets.TK }} # `GH_PAT` is a secret that contains your PAT
-      - name: Download pdf
+          token: ${{ secrets.TK }}
+      - name: install ffmpeg
+        uses: animMouse/setup-ffmpeg@v1
+      - name: Running heavy process Here
         run: |
           chmod +x run_command.sh
-          ./run_command.sh  ${{ github.run_number }}.0.0 "$GITHUB_TOKEN"
+          ./run_command.sh  ${{ github.run_number }}.0.0 $GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
-        
+  
