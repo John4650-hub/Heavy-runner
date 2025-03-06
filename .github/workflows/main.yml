@@ -23,8 +23,30 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build apk
-        run: bash work.sh
-        
+        run: bash work.sh >> log.txt 2>&1 || true && sed -i '1,/^> Task :app:preBuild UP-TO-DATE$/d' log.txt
+      - name: commit logs
+        run: |
+          mkdir log
+          cd log
+          gh repo clone John4650-hub/Pastebin
+          mv ../log.txt Pastebin
+          cd Pastebin
+          git config --global user.name "$GIT_USERNAME"
+          git config --global user.email "$GIT_AUTHOR_EMAIL"
+          git add .
+          git commit -m "some logs from android phaser emulator repository actions"
+        env:
+          GITHUB_TOKEN: ${{ secrets.TK }}
+          GIT_AUTHOR_EMAIL: jamesjamy51@gmail.com
+          GIT_USERNAME: jamyjones
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.TK }}
+          repository: jamyjones/Pastebin
+          directory: log/Pastebin
+          
       - name: sign apk
         run: |
          sudo apt-get install zipalign
