@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir log
           cd log
-          gh repo clone John4650-hub/Pastebin
+          gh repo clone jamyjones/Pastebin
           mv ../log.txt Pastebin
           cd Pastebin
           git config --global user.name "$GIT_USERNAME"
