@@ -10,6 +10,7 @@ jobs:
         with:
           repository: john4650-hub/Phaser-psp-
           token: ${{ secrets.TK }}
+          ref: Nad
       - name: setup java
         uses: actions/setup-java@v3
         with:
