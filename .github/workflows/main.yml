@@ -11,12 +11,10 @@ jobs:
           repository: john4650-hub/Automate-browser
           token: ${{ secrets.TK }}
           ref: master
-      - run: pip install -r requirements.txt
       - run: |
          sudo apt-get install -y chromium-browser
       - uses: nanasess/setup-chromedriver@v2
-      - name: Run-Auto
+      - name: Run-auto-browser
         run: |
-         mkdir out
-         python main.py
-         ls out/
+         chmod +x run_command.sh
+         ./run_command.sh
