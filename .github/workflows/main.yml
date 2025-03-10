@@ -1,4 +1,4 @@
-name: Run Heavy stuff
+name: Run browser
 on:
   workflow_dispatch:
 jobs:
@@ -8,15 +8,15 @@ jobs:
       - name: Checkout private tools
         uses: actions/checkout@v4
         with:
-          repository: john4650-hub/Hello-Android-CI
+          repository: john4650-hub/Automate-browser
           token: ${{ secrets.TK }}
-      - name: install ffmpeg
-        uses: animMouse/setup-ffmpeg@v1
-      - name: Running heavy process Here
+          ref: master
+      - run: pip install -r requirements.txt
+      - run: |
+         sudo apt-get install -y chromium-browser
+      - uses: nanasess/setup-chromedriver@v2
+      - name: Run-Auto
         run: |
-          chmod +x run_command.sh
-          ./run_command.sh  0.${{ github.run_number }}.0 $GITHUB_TOKEN
-        env:
-          GITHUB_TOKEN: ${{ secrets.TK }}
-        shell: bash
-  
+         mkdir out
+         python main.py
+         ls out/
