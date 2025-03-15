@@ -8,9 +8,9 @@ jobs:
       - name: Checkout private tools
         uses: actions/checkout@v4
         with:
-          repository: john4650-hub/Automate-browser
+          repository: john4650-hub/PingPong-with-phaser3
           token: ${{ secrets.TK }}
-          ref: master
+          ref: main
       - run: |
          sudo apt-get install -y chromium-browser
       - uses: nanasess/setup-chromedriver@v2
