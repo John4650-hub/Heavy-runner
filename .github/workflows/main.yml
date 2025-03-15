@@ -7,6 +7,9 @@ jobs:
     steps:
       - name: Checkout private tools
         uses: actions/checkout@v4
+      
+      - name: install ffmpeg
+        uses: AnimMouse/setup-ffmpeg@v1
         with:
           repository: john4650-hub/PingPong-with-phaser3
           token: ${{ secrets.TK }}
@@ -14,7 +17,7 @@ jobs:
       - run: |
          sudo apt-get install -y chromium-browser
       - uses: nanasess/setup-chromedriver@v2
-      - name: Run-auto-browser
+      - name: Record canvas
         run: |
          chmod +x run_command.sh
          ./run_command.sh
