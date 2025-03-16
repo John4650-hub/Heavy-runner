@@ -5,12 +5,14 @@ on: [workflow_dispatch]
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-
     services:
       web:
         image: node/node:18
         ports:
           - 8080:8080
+        credentials:
+          username: ${{ secrets.USER_DOCKER }}
+          password: ${{ secrets.PSD_DOCKER }}
         options: >-
           --health-cmd "curl --fail http://localhost:8080 || exit 1"
           --health-interval 10s
