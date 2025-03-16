@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       web:
-        image: node/node:18
+        image: node:18
         ports:
           - 8080:8080
         credentials:
