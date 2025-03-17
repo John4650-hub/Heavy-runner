@@ -39,11 +39,6 @@ jobs:
     - name: Install Python dependencies
       run: pip install selenium
 
-    - name: Install ChromeDriver
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-chromedriver
-
     - name: Run Selenium tests
       run: |
         chmod +x run_command.sh
