@@ -5,19 +5,6 @@ on: [workflow_dispatch]
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-    services:
-      web:
-        image: node:18
-        ports:
-          - 8080:8080
-        credentials:
-          username: ${{ secrets.USER_DOCKER }}
-          password: ${{ secrets.PSD_DOCKER }}
-        options: >-
-          --health-cmd "curl --fail http://localhost:8080 || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
 
     steps:
     - name: Check out repository
@@ -33,21 +20,29 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      run: |
-        npm install http-server
+      run: npm install http-server
 
     - name: Start web server
       run: |
         npx http-server -p 8080 &
-        sleep 5
+        sleep 10  # Initial wait to give the server some time to start
+
+    - name: Wait for web server to be ready
+      run: |
+        for i in {1..10}; do
+          curl -sSf http://localhost:8080 && break || sleep 5
+        done
 
     - name: Install Python dependencies
+      run: pip install selenium
+
+    - name: Install ChromeDriver
       run: |
-        pip install selenium
+        sudo apt-get update
+        sudo apt-get install -y chromium-chromedriver
 
     - name: Run Selenium tests
       run: |
-        python run_selenium.py
         chmod +x run_command.sh
         ./run_command.sh 0.${{ github.run_number }}.0
       env:
