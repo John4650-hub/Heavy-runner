@@ -1,7 +1,7 @@
 name: TRANSLATE JAVA_GUIDE
 
 on:
-  workflow_dispatch:
+  workflow-dispatch:
 
 jobs:
   generate-matrix:
