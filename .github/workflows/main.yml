@@ -78,7 +78,7 @@ jobs:
         run: |
           git clone https://github.com/Snailclimb/JavaGuide
           for dir in workspace/modified-files-*/; do
-            mv "$dir"* .
+            cp -r "$dir"* .
           done
           cd JavaGuide
           git remote remove origin
