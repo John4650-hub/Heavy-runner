@@ -47,8 +47,10 @@ jobs:
       - name: Upload modifications
         uses: actions/upload-artifact@v4
         with:
-          name: modified-files-${{ matrix.chunk_id }}
-          path: ./out
+          name: json_files
+          path: |
+            ./info.json
+            ./assets/db/data.json
           retention-days: 1
   Combine-all-changes:
     needs:
