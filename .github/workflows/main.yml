@@ -58,11 +58,9 @@ jobs:
   Combine-all-changes:
     needs: translate-the-guide
     runs-on: ubuntu-latest
-    outputs:
     strategy:
       matrix:
         chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
-
     steps:
 
       - name: Checkout repository
