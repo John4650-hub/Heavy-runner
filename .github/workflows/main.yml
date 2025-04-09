@@ -4,24 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  generate-matrix:
+  Get-info-json:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.generate.outputs.matrix }}
-    steps:
-      - name: Generate matrix dynamically
-        id: generate
-        run: |
-          # Generate a JSON array of chunk IDs (1 to 100)
-          MATRIX=$(seq 10 30 | jq -c '[inputs]')
-          echo "::set-output name=matrix::$MATRIX"
-
-  Get-info-jaon:
-    needs: generate-matrix
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - name: Checkout private tools
         uses: actions/checkout@v4
@@ -52,16 +36,37 @@ jobs:
             ./info.json
             ./assets/db/data.json
           retention-days: 1
+  generate-matrix:
+    needs: Get-info-json
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate.outputs.matrix }}
+    steps:
+      - name: Generate matrix dynamically
+        id: generate
+        run: |
+          # Generate a JSON array of chunk IDs (1 to 100)
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./
+
+      - name: Move files to root and update
+        id: generate
+        run: |
+          cp json_files/* .
+          streams_count=$(jq 'keys | length' data.json)
+          streams_count=$(( streams_count / 4 + 1))
+          MATRIX=$(seq 1 $streams_count | jq -c '[inputs]')
+          echo "::set-output name=matrix::$MATRIX"
+
   proccess-json-data:
-    needs:
-      - generate-matrix
-      - translate-the-guide
+    needs: generate-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -85,22 +90,39 @@ jobs:
           python scripts/pyScripts/ytStudy.py
           chmod +x run_ffmpeg*
           ./run_ffmpeg${{ matrix.chunk_id }}.sh || true
-      - name: Merge all changes
+
+      - name: upload matrix generated gif
+        uses: actions/upload-artifact@v4
+        with:
+          name: gif-${{ matrix.chunk_id }}
+          path: ./*.gif
+          retention-days: 1
+
+  Upload_the_gifs_and_json_files:
+    needs: proccess-json-data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: john4650-hub/Hello-Android-CI
+          token: ${{ secrets.TK }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./
+
+      - name: Move files to root and update
         run: |
-          git clone https://github.com/Snailclimb/JavaGuide
-          for dir in workspace/modified-files-*/; do
+          cp json_files/* .
+          cp data.json assets/db/
+          for dir in gif-*; do
             cp -r "$dir"* .
           done
-          cd JavaGuide
-          git remote remove origin
-          git remote add origin 'https://github.com/john4650-hub/JavaGuide.git'
-          git remote set-url origin "https://john4650-hub:$1@github.com/john4650-hub/JavaGuide.git"
-          git config --global user.name "john4650-hub"
-          git config --global user.email "johndelvin51@gmail.com"
-          git config --global --add safe.directory "$(pwd)"
-          git add .
-          git commit -m "Push changes"
-          git push -f --set-upstream origin main
+          python scripts/pyScripts/updateFiles.py
+          python scripts/otherScripts/yewtube/getImgRawUrl.py
+          python scripts/otherScripts/yewtube/updateFiles.py
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
