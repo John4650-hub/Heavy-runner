@@ -2,7 +2,7 @@ name: Run Heavy stuff
 on:
   workflow_dispatch:
 jobs:
-  Work-time:
+  Get_Info_json:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout private tools
@@ -19,3 +19,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
+      - name: upload info.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: Info.json
+          path: info.json
+
