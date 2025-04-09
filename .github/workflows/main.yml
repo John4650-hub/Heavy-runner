@@ -50,8 +50,8 @@ jobs:
       - name: Move files to root and generate Matrix
         id: generate
         run: |
-          cp json_files/* .
-          streams_count=$(jq 'keys | length' data.json)
+          cp -r json_files/* .
+          streams_count=$(jq 'keys | length' assets/db/data.json)
           streams_count=$(( streams_count / 4 + 1))
           MATRIX=$(seq 1 $streams_count | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
@@ -63,8 +63,8 @@ jobs:
       matrix:
         chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
         with:
           repository: john4650-hub/Hello-Android-CI
           token: ${{ secrets.TK }}
@@ -81,8 +81,7 @@ jobs:
       - name: PROCESS THE REST OF THE FILES
         run: |
           ls 
-          cp json_files/* .
-          cp data.json assets/db/
+          cp -r json_files/* .
           python scripts/pyScripts/ytStudy.py
           chmod +x run_ffmpeg*
           ./run_ffmpeg${{ matrix.chunk_id }}.sh || true
@@ -111,8 +110,7 @@ jobs:
 
       - name: Move files to root and update
         run: |
-          cp json_files/* .
-          cp data.json assets/db/
+          cp -r json_files/* .
           for dir in gif-*; do
             cp -r "$dir"* .
           done
