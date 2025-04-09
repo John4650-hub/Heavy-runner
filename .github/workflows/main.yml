@@ -117,7 +117,7 @@ jobs:
       - name: Move files to root and update
         run: |
           cp -r json_files/* .
-          for dir in gif-*; do
+          for dir in gif-*/; do
             cp -r "$dir"* .
           done
           python scripts/pyScripts/updateFiles.py
