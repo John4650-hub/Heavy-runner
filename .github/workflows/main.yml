@@ -1,4 +1,4 @@
-name: TRANSLATE JAVA_GUIDE
+name: RUN STUDY WINDOW
 
 on:
   workflow_dispatch:
@@ -123,6 +123,8 @@ jobs:
           python scripts/pyScripts/updateFiles.py
           python scripts/otherScripts/yewtube/getImgRawUrl.py
           python scripts/otherScripts/yewtube/updateFiles.py
+          chmod +x dispatch_actions_studyWindow.sh
+          ./dispatch_actions_studyWindow.sh
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
