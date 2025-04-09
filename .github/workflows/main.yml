@@ -40,7 +40,7 @@ jobs:
       - name: Get java guide repository
         run: |
           git clone https://github.com/Snailclimb/JavaGuide
-          find ./JavaGuide -type f -name "README.md" > doc_files.txt
+          find ./JavaGuide -type f -name "*.md" > doc_files.txt
           split -n l/90  --numeric-suffixes=11 --suffix-length=2  doc_files.txt chunk_
       - name: Running heavy process Here
         run: |
