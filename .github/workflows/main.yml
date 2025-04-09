@@ -56,7 +56,9 @@ jobs:
           path: ./JavaGuide
           retention-days: 1
   Combine-all-changes:
-    needs: translate-the-guide
+    needs:
+      - generate-matrix
+      - translate-the-guide
     runs-on: ubuntu-latest
     strategy:
       matrix:
