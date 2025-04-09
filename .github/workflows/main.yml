@@ -1,9 +1,27 @@
-name: Run Heavy stuff
+name: TRANSLATE JAVA_GUIDE
+
 on:
   workflow_dispatch:
+
 jobs:
-  Get_Info_json:
+  generate-matrix:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate.outputs.matrix }}
+    steps:
+      - name: Generate matrix dynamically
+        id: generate
+        run: |
+          # Generate a JSON array of chunk IDs (1 to 100)
+          MATRIX=$(seq 10 30 | jq -c '[inputs]')
+          echo "::set-output name=matrix::$MATRIX"
+
+  Get-info-jaon:
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - name: Checkout private tools
         uses: actions/checkout@v4
@@ -12,16 +30,67 @@ jobs:
           token: ${{ secrets.TK }}
       - name: install ffmpeg
         uses: animMouse/setup-ffmpeg@v1
+      - name: install deps
+        run: |
+          pipx install mdformat > log.txt
+          pipx inject mdformat mdformat-gfm mdformat-frontmatter mdformat-footnote mdformat-gfm-alerts >log.txt
+          pip install argostranslate >log.txt
+          pip install -U g4f[all] >log.txt
+
+      - name: Get java guide repository
+        run: |
+          git clone https://github.com/Snailclimb/JavaGuide
+          find ./JavaGuide -type f -name "README.md" > doc_files.txt
+          split -n l/20  --numeric-suffixes=11 --suffix-length=2  doc_files.txt chunk_
       - name: Running heavy process Here
         run: |
           chmod +x run_studyWindow_command.sh
-          ./run_studyWindow_command.sh  0.${{ github.run_number }}.0 $GITHUB_TOKEN
+          ./run_studyWindow_command.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN chunk_${{ matrix.chunk_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
-      - name: upload info.json
+      - name: Upload modifications
         uses: actions/upload-artifact@v4
         with:
-          name: Info.json
-          path: info.json
+          name: modified-files-${{ matrix.chunk_id }}
+          path: ./out
+          retention-days: 1
+  Combine-all-changes:
+    needs:
+      - generate-matrix
+      - translate-the-guide
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./workspace
+          #name: modified-files-${{ matrix.chunk_id }}
+
+      - name: Merge all changes
+        run: |
+          git clone https://github.com/Snailclimb/JavaGuide
+          for dir in workspace/modified-files-*/; do
+            cp -r "$dir"* .
+          done
+          cd JavaGuide
+          git remote remove origin
+          git remote add origin 'https://github.com/john4650-hub/JavaGuide.git'
+          git remote set-url origin "https://john4650-hub:$1@github.com/john4650-hub/JavaGuide.git"
+          git config --global user.name "john4650-hub"
+          git config --global user.email "johndelvin51@gmail.com"
+          git config --global --add safe.directory "$(pwd)"
+          git add .
+          git commit -m "Push changes"
+          git push -f --set-upstream origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.TK }}
+        shell: bash
 
