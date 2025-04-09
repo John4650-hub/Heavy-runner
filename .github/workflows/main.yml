@@ -80,14 +80,11 @@ jobs:
       - name: PROCESS THE REST OF THE FILES
         run: |
           ls 
-          mv json_files/* .
-          mv data.json assets/db/
-          python scripts/pyScripts/ytStudy.py 
-          python scripts/pyScripts/updateFiles.py
-          python scripts/otherScripts/yewtube/getImgRawUrl.py
-          python scripts/otherScripts/yewtube/updateFiles.py
-          #name: modified-files-${{ matrix.chunk_id }}
-
+          cp json_files/* .
+          cp data.json assets/db/
+          python scripts/pyScripts/ytStudy.py
+          chmod +x run_ffmpeg*
+          ./run_ffmpeg${{ matrix.chunk_id }}.sh || true
       - name: Merge all changes
         run: |
           git clone https://github.com/Snailclimb/JavaGuide
