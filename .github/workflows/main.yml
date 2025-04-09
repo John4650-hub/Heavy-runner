@@ -13,7 +13,7 @@ jobs:
         id: generate
         run: |
           # Generate a JSON array of chunk IDs (1 to 100)
-          MATRIX=$(seq 1 10 | jq -c '[inputs]')
+          MATRIX=$(seq 11 20 | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
 
   translate-the-guide:
@@ -41,7 +41,7 @@ jobs:
         run: |
           git clone https://github.com/Snailclimb/JavaGuide
           find ./JavaGuide -type f -name "README.md" > doc_files.txt
-          split -n l/10 doc_files.txt chunk_
+          split -n l/10  --numeric-suffixes=11 --suffix-length=2  doc_files.txt chunk_
       - name: Running heavy process Here
         run: |
           chmod +x run_command.sh
