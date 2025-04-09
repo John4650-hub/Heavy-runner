@@ -63,8 +63,8 @@ jobs:
       matrix:
         chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           repository: john4650-hub/Hello-Android-CI
           token: ${{ secrets.TK }}
