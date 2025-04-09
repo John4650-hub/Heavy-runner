@@ -32,23 +32,18 @@ jobs:
         uses: animMouse/setup-ffmpeg@v1
       - name: install deps
         run: |
-          pipx install mdformat > log.txt
-          pipx inject mdformat mdformat-gfm mdformat-frontmatter mdformat-footnote mdformat-gfm-alerts >log.txt
-          pip install argostranslate >log.txt
-          pip install -U g4f[all] >log.txt
+          pip install yt-dlp
+          pip install bs4
 
-      - name: Get java guide repository
+      - name: Get info.json
         run: |
-          git clone https://github.com/Snailclimb/JavaGuide
-          find ./JavaGuide -type f -name "README.md" > doc_files.txt
-          split -n l/20  --numeric-suffixes=11 --suffix-length=2  doc_files.txt chunk_
-      - name: Running heavy process Here
-        run: |
-          chmod +x run_studyWindow_command.sh
-          ./run_studyWindow_command.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN chunk_${{ matrix.chunk_id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.TK }}
-        shell: bash
+          touch info.json
+          for page in $(seq 1 5);do
+            echo "$page" | bash scripts/otherScripts/yewtube/getPage.sh > "index$page.html"
+          done
+          python scripts/otherScripts/yewtube/scrap.py
+          python scripts/pyScripts/extractVideoInfo.py
+
       - name: Upload modifications
         uses: actions/upload-artifact@v4
         with:
