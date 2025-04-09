@@ -56,13 +56,8 @@ jobs:
           path: ./out
           retention-days: 1
   Combine-all-changes:
-    needs:
-      - generate-matrix
-      - translate-the-guide
+    needs: translate-the-guide
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
 
       - name: Checkout repository
