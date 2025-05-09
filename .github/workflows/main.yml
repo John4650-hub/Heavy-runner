@@ -20,11 +20,21 @@ jobs:
       - name: Get info.json
         run: |
           touch info.json
+          trap 'catch $? $LINENO' EXIT
+          catch() {
+              if [ "$1" -ne 0 ]; then
+                chmod +x dispatch_actions_studyWindow.sh
+                ./dispatch_actions_studyWindow.sh
+                exit 0
+              fi
+          }
           for page in $(seq 1 5);do
             echo "$page" | bash scripts/otherScripts/yewtube/getPage.sh > "index$page.html"
           done
           python scripts/otherScripts/yewtube/scrap.py
           python scripts/pyScripts/extractVideoInfo.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.TK }}
 
       - name: Upload modifications
         uses: actions/upload-artifact@v4
@@ -116,6 +126,14 @@ jobs:
 
       - name: Move files to root and update
         run: |
+          trap 'catch $? $LINENO' EXIT
+          catch() {
+              if [ "$1" -ne 0 ]; then
+                chmod +x dispatch_actions_studyWindow.sh
+                ./dispatch_actions_studyWindow.sh
+                exit 0
+              fi
+          }
           cp -r json_files/* .
           for dir in gif-*/; do
             cp -r "$dir"* .
