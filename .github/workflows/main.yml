@@ -1,149 +1,52 @@
-name: RUN STUDY WINDOW
+name: DOWNLOAD MANGA CHAPTERS
 
 on:
   workflow_dispatch:
 
 jobs:
-  Get-info-json:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout private tools
-        uses: actions/checkout@v4
-        with:
-          repository: john4650-hub/Hello-Android-CI
-          token: ${{ secrets.TK }}
-      - name: install deps
-        run: |
-          pip install yt-dlp
-          pip install bs4
-
-      - name: Get info.json
-        run: |
-          touch info.json
-          trap 'catch $? $LINENO' EXIT
-          catch() {
-              if [ "$1" -ne 0 ]; then
-                chmod +x dispatch_actions_studyWindow.sh
-                ./dispatch_actions_studyWindow.sh
-                exit 0
-              fi
-          }
-          for page in $(seq 1 5);do
-            echo "$page" | bash scripts/otherScripts/yewtube/getPage.sh > "index$page.html"
-          done
-          python scripts/otherScripts/yewtube/scrap.py
-          python scripts/pyScripts/extractVideoInfo.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.TK }}
-
-      - name: Upload modifications
-        uses: actions/upload-artifact@v4
-        with:
-          name: json_files
-          path: |
-            ./info.json
-            ./assets/db/data.json
-          retention-days: 1
   generate-matrix:
-    needs: Get-info-json
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.generate.outputs.matrix }}
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ./
-
-      - name: Move files to root and generate Matrix
+      - name: Generate matrix dynamically
         id: generate
         run: |
-          cp -r json_files/* .
-          streams_count=$(jq 'keys | length' assets/db/data.json)
-          streams_count=$(( streams_count / 4 + 1))
-          MATRIX=$(seq 1 $streams_count | jq -c '[inputs]')
+          # Generate a JSON array of chunk IDs (1 to 100)
+          MATRIX=$(seq 0 80 | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
 
-  proccess-json-data:
+  translate-the-guide:
     needs: generate-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chunk_id: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-      - name: Checkout repository
+      - name: Checkout private tools
         uses: actions/checkout@v4
         with:
           repository: john4650-hub/Hello-Android-CI
           token: ${{ secrets.TK }}
-
       - name: install ffmpeg
         uses: animMouse/setup-ffmpeg@v1
-
       - name: install deps
         run: |
-          pip install yt-dlp
-          cargo install gifski
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ./
-
-      - name: PROCESS THE REST OF THE FILES
+          sudo apt-get update
+          sudo apt-get install imagemagick -y
+          sudo apt-get install pdftk -y
+          pip install bs4
+          pip install requests
+ 
+      - name: Get Chapters
         run: |
-          ls 
-          cp -r json_files/* .
-          for n in $( seq 1 100 ); do
-            touch "run_ffmpeg${n}.sh"
-            echo "#!/bin/bash" > "run_ffmpeg${n}.sh"
-            chmod +x "run_ffmpeg${n}.sh"
-          done
-          python scripts/pyScripts/ytStudy.py
-          ./run_ffmpeg${{ matrix.chunk_id }}.sh || true
-
-      - name: upload matrix generated gif
-        uses: actions/upload-artifact@v4
-        with:
-          name: gif-${{ matrix.chunk_id }}
-          path: ./*.gif
-          retention-days: 1
-
-  Upload_the_gifs_and_json_files:
-    needs: proccess-json-data
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          repository: john4650-hub/Hello-Android-CI
-          token: ${{ secrets.TK }}
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ./
-
-      - name: Move files to root and update
+          git clone https://github.com/Snailclimb/JavaGuide
+          chmod +x scripts/*.sh
+          ./scripts/generate_sed.sh
+      - name: Running heavy process Here
         run: |
-          trap 'catch $? $LINENO' EXIT
-          catch() {
-              if [ "$1" -ne 0 ]; then
-                chmod +x dispatch_actions_studyWindow.sh
-                ./dispatch_actions_studyWindow.sh
-                exit 0
-              fi
-          }
-          cp -r json_files/* .
-          for dir in gif-*/; do
-            cp -r "$dir"* .
-          done
-          python scripts/pyScripts/updateFiles.py
-          python scripts/otherScripts/yewtube/getImgRawUrl.py
-          python scripts/otherScripts/yewtube/updateFiles.py
-          chmod +x dispatch_actions_studyWindow.sh
-          ./dispatch_actions_studyWindow.sh
+          chmod +x run_command.sh
+          ./run_command.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN ${{ matrix.chunk_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
-
