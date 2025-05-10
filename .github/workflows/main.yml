@@ -42,7 +42,7 @@ jobs:
         run: |
           git clone https://github.com/Snailclimb/JavaGuide
           chmod +x scripts/*.sh
-          ./scripts/generate_sed.sh
+          ./scripts/generate_sed_file.sh
       - name: Running heavy process Here
         run: |
           chmod +x run_command.sh
