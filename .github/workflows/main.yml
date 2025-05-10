@@ -13,7 +13,7 @@ jobs:
         id: generate
         run: |
           # Generate a JSON array of chunk IDs (1 to 100)
-          MATRIX=$(seq 0 80 | jq -c '[inputs]')
+          MATRIX=$(seq 0 100 | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
 
   translate-the-guide:
