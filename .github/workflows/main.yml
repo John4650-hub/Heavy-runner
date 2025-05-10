@@ -16,7 +16,7 @@ jobs:
           MATRIX=$(seq 0 100 | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
 
-  translate-the-guide:
+  Get-Manga:
     needs: generate-matrix
     runs-on: ubuntu-latest
     strategy:
