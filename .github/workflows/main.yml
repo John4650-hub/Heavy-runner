@@ -44,25 +44,6 @@ jobs:
             ./info.json
             ./assets/db/data.json
           retention-days: 1
-      - name: delete and recreate repo
-        run: |
-          gh repo delete JamyJones/Pastebin --yes
-          mkdir Pastebin
-          cd Pastebin
-          echo "logs.tx">logs.txt
-          echo "logs.tx">paste.md
-          mkdir assets
-          echo "assets.txt" > assets/assets.txt
-          git init
-          git config --global user.email "jamesjamy51@gmail.com"
-          git config --global user.name "JamyJones"
-          git config --global --add safe.directory  /home/runner/work/Heavy-runner/Heavy-runner/Pastebin
-          git add .
-          git commit -m "Refreshed the repo"
-          gh repo create JamyJones/Pastebin --public --push --remote=upstream  --source=.
-        env:
-          GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
-        shell: bash
   generate-matrix:
     needs: Get-info-json
     runs-on: ubuntu-latest
@@ -142,6 +123,26 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./
+
+      - name: delete and recreate repo
+        run: |
+          gh repo delete JamyJones/Pastebin --yes
+          mkdir Pastebin
+          cd Pastebin
+          echo "logs.tx">logs.txt
+          echo "logs.tx">paste.md
+          mkdir assets
+          echo "assets.txt" > assets/assets.txt
+          git init
+          git config --global user.email "jamesjamy51@gmail.com"
+          git config --global user.name "JamyJones"
+          git config --global --add safe.directory  /home/runner/work/Heavy-runner/Heavy-runner/Pastebin
+          git add .
+          git commit -m "Refreshed the repo"
+          gh repo create JamyJones/Pastebin --public --push --remote=upstream  --source=.
+        env:
+          GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
+        shell: bash
 
       - name: Move files to root and update
         run: |
