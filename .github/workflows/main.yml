@@ -14,10 +14,13 @@ jobs:
         uses: animMouse/setup-ffmpeg@v1
       - name: delete and recreate repo
         run: |
-          git clone https://github.com/JamyJones/Pastebin.git
           gh repo delete JamyJones/Pastebin --yes
+          mkdir Pastebin
           cd Pastebin
-          rm -r .git
+          echo "logs.tx">logs.txt
+          echo "logs.tx">Paste.md
+          mkdir assets
+          echo "assets.txt" > assets.txt
           gh repo create JamyJones/Pastebin --public --include-all-branches --push --remote=upstream  --source=.
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
