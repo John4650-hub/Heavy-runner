@@ -20,7 +20,7 @@ jobs:
           echo "logs.tx">Paste.md
           mkdir assets
           echo "assets.txt" > assets.txt
-          gh repo create JamyJones/Pastebin --public --include-all-branches --push --remote=upstream  --source=.
+          gh repo create JamyJones/Pastebin --public --push --remote=upstream  --source=.
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
         shell: bash
