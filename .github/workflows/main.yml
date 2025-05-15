@@ -82,7 +82,6 @@ jobs:
           streams_count=$(( streams_count / 4 + 1))
           MATRIX=$(seq 1 $streams_count | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
-      - name: Delete history from branch
 
   proccess-json-data:
     needs: generate-matrix
