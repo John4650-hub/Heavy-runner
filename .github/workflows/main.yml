@@ -14,8 +14,7 @@ jobs:
         uses: animMouse/setup-ffmpeg@v1
       - name: delete and recreate repo
         run: |
-          gh repo delete JamyJones/Pastebin --yes | true
-          mkdir Pastebin
+          mkdir Pastebin #gh repo delete JamyJones/Pastebin --yes
           cd Pastebin
           echo "logs.tx">logs.txt
           echo "logs.tx">Paste.md
