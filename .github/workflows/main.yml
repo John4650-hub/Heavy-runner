@@ -21,6 +21,8 @@ jobs:
           mkdir assets
           echo "assets.txt" > assets.txt
           git init
+          git config --global --add safe.directory  /home/runner/work/Heavy-runner/Heavy-runner/Pastebin
+          git commit -m "Refreshed the repo"
           gh repo create JamyJones/Pastebin --public --push --remote=upstream  --source=.
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
