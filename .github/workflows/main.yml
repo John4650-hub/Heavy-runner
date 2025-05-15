@@ -14,12 +14,13 @@ jobs:
         uses: animMouse/setup-ffmpeg@v1
       - name: delete and recreate repo
         run: |
-          mkdir Pastebin #gh repo delete JamyJones/Pastebin --yes
+          gh repo delete JamyJones/Pastebin --yes
+          mkdir Pastebin
           cd Pastebin
           echo "logs.tx">logs.txt
           echo "logs.tx">Paste.md
           mkdir assets
-          echo "assets.txt" > assets.txt
+          echo "assets.txt" > assets/assets.txt
           git init
           git config --global user.email "jamesjamy51@gmail.com"
           git config --global user.name "JamyJones"
