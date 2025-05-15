@@ -18,7 +18,7 @@ jobs:
           mkdir Pastebin
           cd Pastebin
           echo "logs.tx">logs.txt
-          echo "logs.tx">Paste.md
+          echo "logs.tx">paste.md
           mkdir assets
           echo "assets.txt" > assets/assets.txt
           git init
