@@ -132,7 +132,9 @@ jobs:
           echo "logs.tx">logs.txt
           echo "logs.tx">paste.md
           mkdir assets
-          echo "assets.txt" > assets/assets.txt
+          for i in $( seq 0 200 );do
+          echo "assets$i.txt" > assets/S$i.gif
+          done
           git init
           git config --global user.email "jamesjamy51@gmail.com"
           git config --global user.name "JamyJones"
