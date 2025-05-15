@@ -18,7 +18,6 @@ jobs:
           gh repo delete JamyJones/Pastebin --yes
           cd Pastebin
           rm -r .git
-          git branch main
           gh repo create JamyJones/Pastebin --public --include-all-branches --push --remote=upstream  --source=.
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
