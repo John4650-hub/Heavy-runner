@@ -35,7 +35,6 @@ jobs:
           python scripts/pyScripts/extractVideoInfo.py
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
-
       - name: Upload modifications
         uses: actions/upload-artifact@v4
         with:
@@ -61,7 +60,7 @@ jobs:
           cp -r json_files/* .
           streams_count=$(jq 'keys | length' assets/db/data.json)
           streams_count=$(( streams_count / 4 + 1))
-          MATRIX=$(seq 1 $streams_count | jq -c '[inputs]')
+          MATRIX=$(seq 0 $streams_count | jq -c '[inputs]')
           echo "::set-output name=matrix::$MATRIX"
 
   proccess-json-data:
