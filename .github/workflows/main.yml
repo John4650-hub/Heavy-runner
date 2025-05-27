@@ -152,7 +152,7 @@ jobs:
           catch() {
               if [ "$1" -ne 0 ]; then
                 chmod +x dispatch_actions_studyWindow.sh
-                ./dispatch_actions_studyWindow.sh $GITHUB_RUN_ID
+                ./dispatch_actions_studyWindow.sh $GITHUB_RUN_ID $last_run
                 exit 0
               fi
           }
