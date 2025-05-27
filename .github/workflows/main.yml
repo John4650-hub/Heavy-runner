@@ -147,6 +147,7 @@ jobs:
 
       - name: Move files to root and update
         run: |
+          last_run=9
           trap 'catch $? $LINENO' EXIT
           catch() {
               if [ "$1" -ne 0 ]; then
@@ -162,8 +163,7 @@ jobs:
           python scripts/pyScripts/updateFiles.py
           python scripts/otherScripts/yewtube/getImgRawUrl.py
           python scripts/otherScripts/yewtube/updateFiles.py
-          chmod +x dispatch_actions_studyWindow.sh
-          ./dispatch_actions_studyWindow.sh $GITHUB_RUN_ID
+          exit 1
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
