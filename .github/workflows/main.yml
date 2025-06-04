@@ -28,7 +28,7 @@ jobs:
                 exit 0
               fi
           }
-          for page in $(seq 1 5);do
+          for page in $(seq 1 1);do
             echo "$page" | bash scripts/otherScripts/yewtube/getPage.sh > "index$page.html"
           done
           python scripts/otherScripts/yewtube/scrap.py
@@ -140,7 +140,8 @@ jobs:
           git config --global user.name "JamyJones"
           git config --global --add safe.directory  /home/runner/work/Heavy-runner/Heavy-runner/Pastebin
           git add .
-          git commit -m "Refreshed the repo" #gh repo create JamyJones/Pastebin --public --remote=upstream
+          git commit -m "Refreshed the repo" 
+          gh repo create JamyJones/Pastebin --public
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
         shell: bash
