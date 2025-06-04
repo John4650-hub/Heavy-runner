@@ -144,7 +144,7 @@ jobs:
           gh repo create JamyJones/Pastebin --public
           REPO="JamyJones/Pastebin"  # Replace with your repository, e.g., "octocat/Hello-World"
           while true; do
-            gh repo view "$REPO" --quiet
+            gh repo view "$REPO"
             if [[ $? -eq 0 ]]; then
                 echo "Repository $REPO exists. Exiting loop."
                 break
