@@ -28,7 +28,7 @@ jobs:
                 exit 0
               fi
           }
-          for page in $(seq 1 5);do
+          for page in $(seq 1 1);do
             echo "$page" | bash scripts/otherScripts/yewtube/getPage.sh > "index$page.html"
           done
           python scripts/otherScripts/yewtube/scrap.py
@@ -125,8 +125,7 @@ jobs:
 
       - name: delete move and recreate repo
         run: |
-          gh repo delete JamyJones/Pastebin --yes
-          mkdir -p Pastebin/assets
+          mkdir -p Pastebin/assets #gh repo delete JamyJones/Pastebin --yes
           cp -r json_files/* .
           for dir in gif-*/; do
             cp -r "$dir"* Pastebin/assets/
