@@ -126,10 +126,10 @@ jobs:
       - name: delete move and recreate repo
         run: |
           mkdir -p Pastebin/assets #gh repo delete JamyJones/Pastebin --yes
-          cp -r json_files/* .
-          for dir in gif-*/; do
-            cp -r "$dir"* Pastebin/assets/
-          done 
+          #cp -r json_files/* .
+          #for dir in gif-*/; do
+          #  cp -r "$dir"* Pastebin/assets/
+          #done 
           cd Pastebin
           echo "logs.tx">logs.txt
           echo "logs.tx">paste.md
