@@ -28,7 +28,7 @@ jobs:
                 exit 0
               fi
           }
-          for page in $(seq 1 2);do
+          for page in $(seq 1 5);do
             echo "$page" | bash scripts/otherScripts/yewtube/getPage.sh > "index$page.html"
           done
           python scripts/otherScripts/yewtube/scrap.py
