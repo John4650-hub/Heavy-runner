@@ -125,7 +125,8 @@ jobs:
 
       - name: delete move and recreate repo
         run: |
-          mkdir -p Pastebin/assets #gh repo delete JamyJones/Pastebin --yes
+          gh repo delete JamyJones/Pastebin --yes
+          mkdir -p Pastebin/assets
           #cp -r json_files/* .
           #for dir in gif-*/; do
           #  cp -r "$dir"* Pastebin/assets/
@@ -141,6 +142,17 @@ jobs:
           git add .
           git commit -m "Refreshed the repo" 
           gh repo create JamyJones/Pastebin --public
+          REPO="JamyJones/Pastebin"  # Replace with your repository, e.g., "octocat/Hello-World"
+          while true; do
+            gh repo view "$REPO" --quiet
+            if [[ $? -eq 0 ]]; then
+                echo "Repository $REPO exists. Exiting loop."
+                break
+            else
+                echo "Repository $REPO not found. Retrying in 5 seconds..."
+                sleep 5
+            fi
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
         shell: bash
