@@ -156,6 +156,7 @@ jobs:
                 exit 0
               fi
           }
+          pip install supabase
           python scripts/otherScripts/yewtube/getImgRawUrl.py
           python scripts/otherScripts/yewtube/updateFiles.py
           exit 1
