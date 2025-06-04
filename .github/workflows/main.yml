@@ -123,17 +123,17 @@ jobs:
         with:
           path: ./
 
-      - name: delete and recreate repo
+      - name: delete move and recreate repo
         run: |
           gh repo delete JamyJones/Pastebin --yes
-          mkdir Pastebin
+          mkdir -p Pastebin/assets
+          cp -r json_files/* .
+          for dir in gif-*/; do
+            cp -r "$dir"* Pastebin/assets/
+          done 
           cd Pastebin
           echo "logs.tx">logs.txt
           echo "logs.tx">paste.md
-          mkdir assets
-          for i in $( seq 1 200 );do
-          echo "assets$i.txt" > assets/S$i.gif
-          done
           git init
           git config --global user.email "jamesjamy51@gmail.com"
           git config --global user.name "JamyJones"
@@ -156,11 +156,6 @@ jobs:
                 exit 0
               fi
           }
-          cp -r json_files/* .
-          for dir in gif-*/; do
-            cp -r "$dir"* .
-          done
-          python scripts/pyScripts/updateFiles.py
           python scripts/otherScripts/yewtube/getImgRawUrl.py
           python scripts/otherScripts/yewtube/updateFiles.py
           exit 1
