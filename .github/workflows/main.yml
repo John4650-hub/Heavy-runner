@@ -139,12 +139,17 @@ jobs:
           git config --global user.name "JamyJones"
           git config --global --add safe.directory  /home/runner/work/Heavy-runner/Heavy-runner/Pastebin
           git add .
-          git commit -m "Refreshed the repo"
-          gh repo create JamyJones/Pastebin --public --push --remote=upstream  --source=.
+          git commit -m "Refreshed the repo" #gh repo create JamyJones/Pastebin --public --remote=upstream
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
         shell: bash
-
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.TK }}
+          branch: main
+          repository: JamyJones/Pastebin
+          directory: Pastebin
       - name: Move files to root and update
         run: |
           last_run=9
