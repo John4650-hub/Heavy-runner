@@ -37,6 +37,7 @@ jobs:
           sudo apt-get install pdftk -y
           pip install bs4
           pip install requests
+          pip install selenium webdriver-manager
  
       - name: Get Chapters
         run: |
