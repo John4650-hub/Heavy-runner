@@ -118,6 +118,13 @@ jobs:
           repository: john4650-hub/Hello-Android-CI
           token: ${{ secrets.TK }}
 
+      - uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          shell: bash
+          command: ls
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:

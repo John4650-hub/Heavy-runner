@@ -1,0 +1,15 @@
+is_repo_present(){
+            while true;do
+            if [[ $1 -eq 0 ]];then
+              echo "Repository $REPO exists. Exiting loop."
+              exit 0
+              break
+            else
+              trap 'is_repo_present $? $LINENO' EXIT
+              gh repo view "$REPO"
+            fi
+            done
+          }
+          trap 'is_repo_present $? $LINENO' EXIT
+          gh repo view "$REPO"
+
