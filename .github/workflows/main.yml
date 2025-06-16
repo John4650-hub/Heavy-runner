@@ -148,7 +148,6 @@ jobs:
 
       - name: delete move and recreate repo
         run: |
-          gh repo delete JamyJones/Pastebin --yes
           mkdir -p Pastebin/assets
           cp -r json_files/* .
           for dir in gif-*/; do
@@ -161,12 +160,9 @@ jobs:
           git init
           git config --global user.email "jamesjamy51@gmail.com"
           git config --global user.name "JamyJones"
-          git config --global --add safe.directory  /home/runner/work/Heavy-runner/Heavy-runner/Pastebin
+          git config --global --add safe.directory $(pwd)
           git add .
           git commit -m "Refreshed the repo" 
-          gh repo create JamyJones/Pastebin --public
-          REPO="JamyJones/Pastebin"  # Replace with your repository, e.g., "octocat/Hello-World"
-          sleep 10
         env:
           GITHUB_TOKEN: ${{ secrets.TK_JAMY }}
         shell: bash
