@@ -44,9 +44,7 @@ jobs:
           chmod +x scripts/*.sh
           ./scripts/generate_sed_file.sh
       - name: Running heavy process Here
-        run: |
-          chmod +x run_command.sh
-          ./run_command.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh
+        run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
