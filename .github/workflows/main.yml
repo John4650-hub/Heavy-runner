@@ -21,7 +21,8 @@ jobs:
           chapters=()
           # Loop through each key in mangaDownloader.json
           for mKey in $(jq -r 'keys[]' configs/mangaDownloader.json); do
-            range=$(jq -r --arg key "$mKey" '.[$key].chapter_ranges' configs/mangaDownloader.json)
+          echo $mKey
+            range=$(jq -r --arg key "$mKey" '.[$key].chapter_range' configs/mangaDownloader.json)
             IFS='-' read -r start end <<< "$range"
             for chapter in $(seq "$start" "$end"); do
               chapters+=("\"$mKey-$chapter\"")
@@ -61,7 +62,7 @@ jobs:
           mkey=$(echo "${{ matrix.chunk_id }}" | cut -d '-' -f 1)
           chapter=$(echo "${{ matrix.chunk_id }}" | cut -d '-' -f 2)
           # Get range for safety, not strictly necessary unless needed by your script
-          range=$(jq -r --arg key "$mkey" '.[$key].chapter_ranges' configs/mangaDownloader.json)
+          range=$(jq -r --arg key "$mkey" '.[$key].chapter_range' configs/mangaDownloader.json)
           IFS='-' read -r start end <<< "$range"
           ./scripts/generate_sed_file.sh "$start" "$end" "$mkey"
 
