@@ -29,7 +29,6 @@ jobs:
             done
           done
           # Compose as a JSON array
-          echo "matrix=[$(IFS=,; echo "${chapters[*]}")]"
           echo "matrix=[$(IFS=,; echo "${chapters[*]}")]" >> $GITHUB_OUTPUT
 
   Get-Manga:
@@ -60,11 +59,7 @@ jobs:
           chmod +x scripts/*.sh
           # Parse chunk_id to get mKey and chapter
           # Get range for safety, not strictly necessary unless needed by your script
-          for mkey in $(jq -r 'keys[]' configs/mangaDownloader.json); do
-          range=$(jq -r --arg key "$mkey" '.[$key].chapter_range' configs/mangaDownloader.json)
-          IFS='-' read -r start end <<< "$range"
-          ./scripts/generate_sed_file.sh "$start" "$end" "$mkey"
-          done
+          ./scripts/generate_sed_file.sh  ${{ matrix.chunk_id }}
 
       - name: Running heavy process Here
         run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh ${{ matrix.chunk_id }}
