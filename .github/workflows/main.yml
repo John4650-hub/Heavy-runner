@@ -59,18 +59,15 @@ jobs:
         run: |
           chmod +x scripts/*.sh
           # Parse chunk_id to get mKey and chapter
-          mkey=$(echo "${{ matrix.chunk_id }}" | cut -d '-' -f 1)
-          chapter=$(echo "${{ matrix.chunk_id }}" | cut -d '-' -f 2)
           # Get range for safety, not strictly necessary unless needed by your script
+          for mkey in $(jq -r 'keys[]' configs/mangaDownloader.json); do
           range=$(jq -r --arg key "$mkey" '.[$key].chapter_range' configs/mangaDownloader.json)
           IFS='-' read -r start end <<< "$range"
           ./scripts/generate_sed_file.sh "$start" "$end" "$mkey"
-          ls
+          done
 
       - name: Running heavy process Here
         run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh ${{ matrix.chunk_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
-      - name: List files
-        run: ls *.pdf
