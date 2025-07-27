@@ -65,9 +65,12 @@ jobs:
           range=$(jq -r --arg key "$mkey" '.[$key].chapter_range' configs/mangaDownloader.json)
           IFS='-' read -r start end <<< "$range"
           ./scripts/generate_sed_file.sh "$start" "$end" "$mkey"
+          ls
 
       - name: Running heavy process Here
         run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh ${{ matrix.chunk_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
+      - name: List files
+        run: ls *.pdf
