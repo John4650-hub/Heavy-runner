@@ -28,6 +28,7 @@ jobs:
             done
           done
           # Compose as a JSON array
+          echo "matrix=[$(IFS=,; echo "${chapters[*]}")]"
           echo "matrix=[$(IFS=,; echo "${chapters[*]}")]" >> $GITHUB_OUTPUT
 
   Get-Manga:
