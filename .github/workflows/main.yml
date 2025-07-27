@@ -52,7 +52,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install imagemagick -y
           sudo apt-get install pdftk -y
-          pip install bs4 requests selenium webdriver-manager
+          pip install bs4 requests selenium webdriver-manager cloudinary-cli
 
       - name: Prepare Chapter
         run: |
