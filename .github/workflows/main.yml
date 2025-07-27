@@ -9,12 +9,25 @@ jobs:
     outputs:
       matrix: ${{ steps.generate.outputs.matrix }}
     steps:
+      - name: Checkout Files
+        uses: actions/checkout@v4
+        with:
+          repository: john4650-hub/Hello-Android-CI
+          token: ${{ secrets.TK }}
+
       - name: Generate matrix dynamically
         id: generate
         run: |
-          # Generate a JSON array of chunk IDs (1 to 100)
-          MATRIX=$(seq 0 100 | jq -c '[inputs]')
-          echo "::set-output name=matrix::$MATRIX"
+          # Generate a JSON array of chunk IDs
+          all_manga_chatpters=()
+          for mKey in $(jq -r 'keys[]' configs/mangaDownloader.json);do
+            range=$(jq --arg key "$mKey" '.[$key]'.chapter_ranges" configs/mangaDownloader.json)
+            IFS='-' read start end <<< "$range"
+            for chapter in $(seq $start $end);do
+              all_manga_chatpters+=("$mKey-$chapter")
+            done
+          done
+          echo "::set-output name=matrix::$all_manga_chatpters"
 
   Get-Manga:
     needs: generate-matrix
@@ -42,9 +55,12 @@ jobs:
       - name: Get Chapters
         run: |
           chmod +x scripts/*.sh
-          ./scripts/generate_sed_file.sh
+          for mKey in $(jq -r 'keys[]' configs/mangaDownloader.json); do
+            range=$(jq --arg key "$mKey" '.[$key]'.chapter_ranges" configs/mangaDownloader.json)
+            IFS='-' read start end <<< "$range"
+          ./scripts/generate_sed_file.sh "$start" "$end" "$mKey"
       - name: Running heavy process Here
-        run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh
+        run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh ${{ matrix.chunk_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
