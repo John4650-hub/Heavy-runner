@@ -52,15 +52,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install imagemagick -y
           sudo apt-get install pdftk -y
-          pip install bs4 requests selenium webdriver-manager cloudinary-cli
+          pip install bs4 requests selenium webdriver-manager
 
       - name: Prepare Chapter
         run: |
           chmod +x scripts/*.sh
           # Parse chunk_id to get mKey and chapter
           # Get range for safety, not strictly necessary unless needed by your script
-          ./scripts/generate_sed_file.sh  ${{ matrix.chunk_id }}
-
+          for mKey in $(jq -r 'keys[]' configs/mangaDownloader.json); do
+            range=$(jq -r --arg key "$mKey" '.[$key].chapter_range' configs/mangaDownloader.json)
+            IFS='-' read -r start end <<< "$range"
+          ./scripts/generate_sed_file.sh $start $end $mKey
+          done
       - name: Running heavy process Here
         run: ./scripts/imageMagic.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN sed_${{ matrix.chunk_id }}.sh ${{ matrix.chunk_id }}
         env:
