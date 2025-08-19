@@ -15,7 +15,7 @@ jobs:
           pip install flask black
       - name: Running heavy process Here
         run: |
-          gh clone John4650-hub/Hello-Android-CI
+          gh repo clone John4650-hub/Hello-Android-CI
           chmod +x Hello-Android-CI/scripts/*.sh
           ./Hello-Android-CI/scripts/ngrok.sh >>log.txt 2>&1 || true
         env:
