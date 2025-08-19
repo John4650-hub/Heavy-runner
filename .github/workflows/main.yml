@@ -12,7 +12,7 @@ jobs:
           token: ${{ secrets.TK }}
       - name: install dependencies
         run: |
-          pip install flask flask_cor black
+          pip install flask flask-cor black
       - name: Running heavy process Here
         run: |
           gh clone John4650-hub/Hello-Android-CI
