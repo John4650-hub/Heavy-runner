@@ -1,4 +1,4 @@
-name: Run Heavy stuff
+name: Run Code Editor
 on:
   workflow_dispatch:
 jobs:
@@ -8,14 +8,16 @@ jobs:
       - name: Checkout private tools
         uses: actions/checkout@v4
         with:
-          repository: john4650-hub/Hello-Android-CI
+          repository: John4650-hub/Ace-Code
           token: ${{ secrets.TK }}
-      - name: install ffmpeg
-        uses: animMouse/setup-ffmpeg@v1
+      - name: install dependencies
+        run: |
+          pip install flask flask_cor black
       - name: Running heavy process Here
         run: |
-          chmod +x run_command.sh
-          ./run_command.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN >>log.txt 2>&1 || true
+          gh clone John4650-hub/Hello-Android-CI
+          chmod +x Hello-Android-CI/scripts/*.sh
+          ./Hello-Android-CI/scripts/ngrok.sh >>log.txt 2>&1 || true
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
