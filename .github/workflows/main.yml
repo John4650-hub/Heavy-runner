@@ -10,6 +10,15 @@ jobs:
         with:
           repository: john4650-hub/learning_react
           token: ${{ secrets.TK }}
+      - name: restore npm cache
+        id: npm-deps-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ./node_modules/
+            ./package-lock.json
+          key: ${{ runner.os }}-chattinga
+
       - name: Running heavy process Here
         run: |
           chmod +x work.sh
@@ -18,6 +27,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
 
+      - name: save cache
+        id: npm-deps-cache-save
+        with:
+          path: |
+            ./node_modules/
+            ./package-lock.json
+          key: ${{ steps.npm-deps-cache-restore.outputs.cache-primary-key }}
+
+        uses: actions/cache/save@v4
+        with:
+          path: |
       - name: commit logs
         run: |
           mkdir log
