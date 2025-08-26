@@ -29,15 +29,13 @@ jobs:
 
       - name: save cache
         id: npm-deps-cache-save
+        uses: actions/cache/save@v4
         with:
           path: |
             ./node_modules/
             ./package-lock.json
           key: ${{ steps.npm-deps-cache-restore.outputs.cache-primary-key }}
 
-        uses: actions/cache/save@v4
-        with:
-          path: |
       - name: commit logs
         run: |
           mkdir log
