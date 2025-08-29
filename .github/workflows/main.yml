@@ -17,7 +17,7 @@ jobs:
           path: |
             ./node_modules/
             ./package-lock.json
-          key: ${{ runner.os }}-chattinga
+          key: ${{ runner.os }}-chattinga-1
 
       - name: Running heavy process Here
         run: |
