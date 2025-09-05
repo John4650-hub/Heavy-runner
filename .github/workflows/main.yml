@@ -8,12 +8,14 @@ jobs:
       - name: Checkout private tools
         uses: actions/checkout@v4
         with:
-          repository: john4650-hub/learning_react
+          repository: john4650-hub/Hello-Android-CI
           token: ${{ secrets.TK }}
+      - name: install ffmpeg
+        uses: animMouse/setup-ffmpeg@v1
       - name: Running heavy process Here
         run: |
-          chmod +x work.sh
-          ./work.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN >>log.txt 2>&1 || true
+          chmod +x run_command.sh
+          ./run_command.sh 0.${{ github.run_number }}.0 $GITHUB_TOKEN >>log.txt 2>&1 || true
         env:
           GITHUB_TOKEN: ${{ secrets.TK }}
         shell: bash
