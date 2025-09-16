@@ -17,9 +17,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./.venv/
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-2-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-2-pip-
 
       - name: Running heavy process Here
         run: |
