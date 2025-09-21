@@ -173,6 +173,7 @@ jobs:
           branch: main
           repository: JamyJones/Pastebin
           directory: Pastebin
+          force: true
       - name: Move files to root and update
         run: |
           last_run=9
